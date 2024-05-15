@@ -1,5 +1,5 @@
 import {
-  Chip,
+  Avatar,
   Divider,
   ListItem,
   ListItemText,
@@ -8,34 +8,57 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import fetchModel from "../../../lib/fetchModelData";
+import { setBasic } from "../../../redux/actions/modeAction";
+import { socketComment } from "../../../utils/socketComment";
+
 const ItemUser = (props) => {
-  const { item, handleClick, setIsAdvance } = props;
+  const { item, handleClick, isLast } = props;
   const [numOfPhotos, setNumOfPhotos] = useState(0);
   const [numOfComment, setNumOfComment] = useState(0);
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const arrPath = pathname?.split("/");
+
   const getData = async () => {
-    const photos = await fetchModel(`/photosOfUser/${item?._id}`);
-    console.log("photos", photos);
-    setNumOfPhotos(photos.length);
-    const photoUserComment = await fetchModel(`/commentsOfUser/${item?._id}`);
-    let count = 0;
-    photoUserComment.map((i) =>
-      i?.comments?.map((items) => {
-        if (items.user._id == item?._id) count++;
-      }),
-    );
-    console.log(count);
-    setNumOfComment(count);
+    try {
+      const photos = await fetchModel(`/api/photosOfUser/${item?._id}`);
+      if (photos?.success) setNumOfPhotos(photos?.data?.length);
+      console.log("🚀 ~ getData ~ photos:", photos);
+      const photoUserComment = await fetchModel(
+        `/api/commentsOfUser/${item?._id}`
+      );
+      let count = 0;
+      if (photoUserComment?.success)
+        photoUserComment?.data?.map((i) =>
+          i?.comments?.map((items) => {
+            if (items.user._id == item?._id) count++;
+          })
+        );
+
+      setNumOfComment(count);
+    } catch (error) {
+      console.log("🚀 ~ getData ~ error:", error);
+    }
   };
+  const goToPhotoUserComment = (userId) => {
+    dispatch(setBasic());
+    navigate(`/commentOfUser/${userId}`);
+  };
+  const goToPhotosOfUser = (userId) => {
+    navigate(`/photos/${userId}`);
+  };
+
   useEffect(() => {
     getData();
   }, []);
-  const goToPhotoUserComment = () => {
-    setIsAdvance(false);
-    navigate(`/commentOfUser/${item?._id}`);
-  };
+  useEffect(() => {
+    socketComment.on("commented", () => getData());
+  }, [socketComment]);
   return (
     <Typography style={{ cursor: "pointer" }}>
       <ListItem>
@@ -45,25 +68,32 @@ const ItemUser = (props) => {
             onClick={() => handleClick(item?._id)}
           />
           <Stack direction="row" spacing={0.5} alignItems={"center"}>
-            {numOfPhotos ? (
-              <Chip size="small" label={numOfPhotos} color="success" />
-            ) : (
-              <></>
-            )}
             {numOfComment ? (
-              <Chip
-                size="small"
-                label={numOfComment}
-                color="error"
-                onClick={goToPhotoUserComment}
-              />
+              <Avatar
+                onClick={() => goToPhotoUserComment(item?._id)}
+                sx={{ backgroundColor: "#d32f2f", width: 24, height: 24 }}
+              >
+                <Typography variant="body2" color={"whitesmoke"}>
+                  {numOfComment}
+                </Typography>
+              </Avatar>
+            ) : null}
+            {numOfPhotos ? (
+              <Avatar
+                onClick={() => goToPhotosOfUser(item?._id)}
+                sx={{ backgroundColor: "#2e7d32", width: 24, height: 24 }}
+              >
+                <Typography variant="body2" color={"whitesmoke"}>
+                  {numOfPhotos}
+                </Typography>
+              </Avatar>
             ) : (
               <></>
             )}
           </Stack>
         </Stack>
       </ListItem>
-      <Divider />
+      {!isLast && <Divider />}
     </Typography>
   );
 };

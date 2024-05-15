@@ -1,10 +1,12 @@
 import { Grid } from "@mui/material";
+import ItemTrong from "../../../common/notThing/ItemTrong";
+import { translate } from "../../../utils/i18n/translate";
 import ItemPhoto from "./ItemPhoto";
 
 const BasicMode = (props) => {
   const { userModel, userInfo, isComment } = props;
-  return (
-    <Grid container spacing={2} columns={16}>
+  return userModel?.length ? (
+    <Grid container spacing={2}>
       {userModel?.map((item, index) => (
         <ItemPhoto
           item={item}
@@ -14,6 +16,8 @@ const BasicMode = (props) => {
         />
       ))}
     </Grid>
+  ) : (
+    <ItemTrong content={translate("photoSharing:noPhoto")} />
   );
 };
 

@@ -1,9 +1,9 @@
 .main-topbar-buffer {
-  margin-top: 70px;
+  margin-top: 20px;
 }
 
-.main-grid-item {
+/* .main-grid-item {
   min-height: calc(100vh - 85px);
   height: fit-content;
   padding: 10px;
-}
+} */
