@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
+import LoadingComponent from "../../common/loading/LoadingComponent";
 import fetchModel from "../../lib/fetchModelData";
-import "./styles.css";
+import { translate } from "../../utils/i18n/translate";
 
 /**
  * Define UserDetail, a React component of Project 4.
@@ -12,12 +13,16 @@ function UserDetail() {
   const user = useParams();
   const [userInfo, setUserInfo] = useState({});
   const [loading, setLoading] = useState(false);
-  const getData = () => {
-    setLoading(true);
-    fetchModel(`/user/${user.userId}`).then((data) => {
-      setUserInfo(data);
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const res = await fetchModel(`/api/user/${user.userId}`);
+      if (res?.success) setUserInfo(res?.data);
       setLoading(false);
-    });
+    } catch (error) {
+      console.log("🚀 ~ getData ~ error:", error);
+      setLoading(false);
+    }
   };
   useEffect(() => {
     user && getData();
@@ -28,14 +33,12 @@ function UserDetail() {
   };
 
   return loading ? (
-    <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
-      <CircularProgress />
-    </Box>
+    <LoadingComponent />
   ) : (
     <Grid container display={"flex"}>
       <Grid item xs={12}>
         <Typography variant="subtitle2" color={"gray"}>
-          Tên:
+          {translate("photoSharing:fullName")}:
         </Typography>
         <Typography variant="h6" gutterBottom>
           {userInfo?.first_name} {userInfo?.last_name}
@@ -43,7 +46,7 @@ function UserDetail() {
       </Grid>
       <Grid item xs={12}>
         <Typography variant="subtitle2" color={"gray"}>
-          Địa chỉ:
+          {translate("photoSharing:location")}:
         </Typography>
         <Typography variant="h6" gutterBottom>
           {userInfo?.location}
@@ -51,7 +54,7 @@ function UserDetail() {
       </Grid>
       <Grid item xs={12}>
         <Typography variant="subtitle2" color={"gray"}>
-          Nghề nghiệp:
+          {translate("photoSharing:occupation")}:
         </Typography>
         <Typography variant="h6" gutterBottom>
           {userInfo?.occupation}
@@ -59,7 +62,7 @@ function UserDetail() {
       </Grid>
       <Grid item xs={12}>
         <Typography variant="subtitle2" color={"gray"}>
-          Mô tả:
+          {translate("photoSharing:description")}:
         </Typography>
         <Typography
           variant="h6"
@@ -69,7 +72,7 @@ function UserDetail() {
       </Grid>
       <Grid item textAlign={"center"} width={"100%"}>
         <Button variant="contained" color="primary" onClick={handleClick}>
-          Go to Photostream
+          {translate("photoSharing:goToPhotostream")}
         </Button>
       </Grid>
     </Grid>

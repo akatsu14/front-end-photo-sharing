@@ -1,57 +1,107 @@
 import "./App.css";
 
-import { Grid, Paper } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
-import TopBar from "./components/TopBar";
+// import { Login } from "@mui/icons-material";
+import { Box } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { loadUser } from "./common/functions";
+import Auth from "./components/Auth";
+import ProtectedRoot from "./components/Auth/ProtectedRoute";
+import Chat from "./components/Chat";
+import DashBoard from "./components/DashBroad";
+import InitialPage from "./components/DashBroad/Item/IntialPage";
+import UserComment from "./components/UserComment";
 import UserDetail from "./components/UserDetail";
 import UserList from "./components/UserList";
 import UserPhotos from "./components/UserPhotos";
-import UserComment from "./components/UserComment";
-
+import BookmarkPhotos from "./components/UserPhotos/Item/BookmarkPhotos";
+import FavoritePhotos from "./components/UserPhotos/Item/FavoritePhotos";
 const App = (props) => {
-  const [isAdvance, setIsAdvance] = useState(false);
+  const dispatch = useDispatch();
+  const { language } = useSelector((state) => state.language);
+
+  useEffect(() => {
+    loadUser(dispatch);
+  }, []);
   return (
-    <Router>
-      <div>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TopBar setIsAdvance={setIsAdvance} isAdvance={isAdvance} />
-          </Grid>
-          <div className="main-topbar-buffer" />
-          <Grid item sm={3}>
-            <Paper className="main-grid-item" minheight={"100vh"}>
-              <UserList setIsAdvance={setIsAdvance} />
-            </Paper>
-          </Grid>
-          <Grid item sm={9} minheight={"100vh"}>
-            <Paper
-              className={"main-grid-item"}
-              style={{ marginBottom: "60px" }}
-            >
-              <Routes>
-                <Route path="/users/:userId" element={<UserDetail />} />
-                <Route
-                  path="/photos/:userId"
-                  element={<UserPhotos isAdvance={isAdvance} />}
-                />
-                <Route path="/users" element={<UserList />} />
-                <Route
-                  path="/commentOfUser/:userId"
-                  element={
-                    <UserComment
-                      isAdvance={isAdvance}
-                      setIsAdvance={setIsAdvance}
-                    />
-                  }
-                />
-              </Routes>
-            </Paper>
-          </Grid>
-        </Grid>
-      </div>
-    </Router>
+    <Box bgcolor={"#E4E6EB"}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<DashBoard isHaveUserList={true}/>}>
+            <Route
+              index
+              path="/"
+              element={
+                <ProtectedRoot>
+                  <InitialPage />
+                </ProtectedRoot>
+              }
+            />
+            <Route
+              index
+              path="/users/:userId"
+              element={
+                <ProtectedRoot>
+                  <UserDetail />
+                </ProtectedRoot>
+              }
+            />
+            <Route
+              index
+              path="/photos/:userId"
+              element={
+                <ProtectedRoot>
+                  <UserPhotos />
+                </ProtectedRoot>
+              }
+            />
+            <Route
+              index
+              path="/users"
+              element={
+                <ProtectedRoot>
+                  <UserList />
+                </ProtectedRoot>
+              }
+            />
+            <Route
+              index
+              path="/commentOfUser/:userId"
+              element={
+                <ProtectedRoot>
+                  <UserComment />
+                </ProtectedRoot>
+              }
+            />
+          </Route>
+          <Route path="/login" element={<Auth authRoute="login" />} />
+          <Route path="/register" element={<Auth authRoute="register" />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/me" element={<DashBoard />}>
+            <Route
+              index
+              path="/me/favorite"
+              element={
+                <ProtectedRoot>
+                  <FavoritePhotos />
+                </ProtectedRoot>
+              }
+            />
+            <Route
+              index
+              path="/me/bookmark"
+              element={
+                <ProtectedRoot>
+                  <BookmarkPhotos />
+                </ProtectedRoot>
+              }
+            />
+          </Route>
+        </Routes>
+      </Router>
+    </Box>
   );
 };
 

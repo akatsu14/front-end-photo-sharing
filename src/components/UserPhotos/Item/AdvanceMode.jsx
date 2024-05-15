@@ -1,48 +1,56 @@
-import { Button, Grid, MobileStepper, useTheme } from "@mui/material";
-import React, { useState } from "react";
+import { Grid } from "@mui/material";
+import React from "react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Keyboard, Mousewheel, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import ItemTrong from "../../../common/notThing/ItemTrong";
+import { translate } from "../../../utils/i18n/translate";
 import ItemPhoto from "./ItemPhoto";
-import SwipeableViews from "react-swipeable-views";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 const AdvanceMode = (props) => {
-  const { userModel, userInfo, listUser, goToUser, isComment, index } = props;
-  const theme = useTheme();
-  const [activeStep, setActiveStep] = useState(index ? index : 0);
-  const maxSteps = userModel.length;
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleStepChange = (step) => {
-    setActiveStep(step);
-  };
-
+  const { userModel, userInfo, goToUser, isComment, index } = props;
+  const moreThanOne = userModel?.length > 1;
+  const listModule = moreThanOne
+    ? [Navigation, Pagination, Mousewheel, Keyboard]
+    : [];
   return (
-    <Grid item xs={12} display={"flex"} justifyContent="center">
-      <SwipeableViews
-        axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-        index={activeStep}
-        onChangeIndex={handleStepChange}
-        enableMouseEvents
-        style={{ display: "flex", justifyContent: "center" }}
-      >
-        {userModel?.map((step, index) => {
-          return Math.abs(activeStep - index) <= 1 ? (
-            <ItemPhoto
-              item={step}
-              key={step._id}
-              userInfo={userInfo}
-              goToUser={goToUser}
-              isAdvance
-              isComment={isComment}
-            />
-          ) : null;
-        })}
-      </SwipeableViews>
-      <MobileStepper
+    <Grid container xs={12} display={"flex"} justifyContent="center">
+      {userModel?.length ? (
+        <Swiper
+          // direction={"vertical"}
+          // pagination={pagination}
+          initialSlide={index ? index : 0}
+          cssMode={moreThanOne}
+          navigation={moreThanOne}
+          pagination={moreThanOne}
+          mousewheel={moreThanOne}
+          keyboard={moreThanOne}
+          modules={listModule}
+          spaceBetween={50}
+          slidesPerView={1}
+          onSlideChange={() => console.log("slide change")}
+          onSwiper={(swiper) => console.log(swiper)}
+        >
+          {userModel?.map((step, index) => {
+            return (
+              <SwiperSlide>
+                <ItemPhoto
+                  item={step}
+                  key={step._id}
+                  userInfo={userInfo}
+                  goToUser={goToUser}
+                  isAdvance
+                  isComment={isComment}
+                />
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      ) : (
+        <ItemTrong content={translate("photoSharing:noPhoto")} />
+      )}
+      {/* <MobileStepper
         steps={maxSteps}
         position="bottom"
         activeStep={activeStep}
@@ -70,7 +78,7 @@ const AdvanceMode = (props) => {
             Back
           </Button>
         }
-      />
+      /> */}
     </Grid>
   );
 };
