@@ -3,23 +3,29 @@
   "setupTasks": [
     {
       "name": "Install Dependencies",
-      "command": "pnpm install"
+      "command": "yarn install"
     }
   ],
 
   // These tasks can be run from CodeSandbox. Running one will open a log in the app.
   "tasks": {
-    "install": {
-      "name": "install dependencies",
-      "command": "pnpm install"
-    },
-    "Development": {
-      "name": "Development",
-      "command": "pnpm dev",
+    "dev": {
+      "name": "dev",
+      "command": "yarn dev",
       "runAtStart": true,
       "preview": {
         "port": 5173
       }
+    },
+    "build": {
+      "name": "build",
+      "command": "yarn build",
+      "runAtStart": false
+    },
+    "preview": {
+      "name": "preview",
+      "command": "yarn preview",
+      "runAtStart": false
     }
   }
 }
