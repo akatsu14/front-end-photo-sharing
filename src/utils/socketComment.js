@@ -1,8 +1,7 @@
 import { io } from "socket.io-client";
 
 // export const BaseUrl = "http://localhost:8081";
-const BaseUrl = "https://dxfz3n-8081.csb.app";
-
+export const BaseUrl = "https://dxfz3n-8081.csb.app";
 
 // export const socket = io.connect("http://localhost:3000");
 // export const socketComment = io.connect("http://localhost:8080");

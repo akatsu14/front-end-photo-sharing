@@ -1,4 +1,4 @@
-import { rootUrl } from "../common/constants";
+import { BaseUrl } from "../utils/socketComment";
 import { getAuthToken } from "../common/functions";
 
 /**
@@ -7,6 +7,7 @@ import { getAuthToken } from "../common/functions";
  * @param {string} url      The URL to issue the GET request.
  *
  */
+
 function fetchModel(url, method, body) {
   const token = getAuthToken();
   const request = {
@@ -17,7 +18,7 @@ function fetchModel(url, method, body) {
     method,
     body,
   };
-  const models = fetch(rootUrl + url, request).then((res) => res.json());
+  const models = fetch(BaseUrl + url, request).then((res) => res.json());
 
   return models;
 }
