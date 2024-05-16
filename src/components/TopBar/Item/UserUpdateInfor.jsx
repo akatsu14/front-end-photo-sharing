@@ -1,14 +1,18 @@
+import { LoadingButton } from "@mui/lab";
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    Stack,
-    TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  FormControl,
+  Stack,
+  TextField,
 } from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import fetchModel from "../../../lib/fetchModelData";
 import { setUser } from "../../../redux/actions/authAction";
 import { translate } from "../../../utils/i18n/translate";
@@ -17,7 +21,9 @@ import DoubleTextField from "../../Auth/RegisterForm/Item/DoubleTextField";
 const UserUpdateInfor = (props) => {
   const { open, onClose } = props;
   const { user } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -25,6 +31,13 @@ const UserUpdateInfor = (props) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
+      first_name: "",
+      last_name: "",
+      location: "",
+      description: "",
+      occupation: "",
+    },
+    values: {
       first_name: user?.first_name,
       last_name: user?.last_name,
       location: user?.location,
@@ -35,13 +48,22 @@ const UserUpdateInfor = (props) => {
 
   const updateInfor = async (event) => {
     try {
-      const res = await fetchModel("/api/user", "patch", JSON.stringify(event));
+      console.log("update");
+      setLoading(true);
+      const res = await fetchModel(
+        "/api/user/me",
+        "put",
+        JSON.stringify(event)
+      );
       if (res.success) {
-        dispatch(setUser({ user: res.data }));
+        dispatch(setUser({ user: res?.data }));
         onClose();
+        navigate(`/users/${user._id}`);
       }
+      setLoading(false);
     } catch (error) {
       console.log("🚀 ~ handleSubmit ~ error:", error);
+      setLoading(false);
     }
   };
   return (
@@ -52,7 +74,7 @@ const UserUpdateInfor = (props) => {
         </DialogContentText>
       </DialogContent>
       <DialogContent>
-        <form onSubmit={handleSubmit(updateInfor)}>
+        <FormControl>
           <Stack spacing={2}>
             <DoubleTextField
               register={register}
@@ -87,10 +109,17 @@ const UserUpdateInfor = (props) => {
               {...register("description")}
             />
           </Stack>
-        </form>
+        </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button>{translate("photoSharing:update")}</Button>
+        <Button onClick={onClose}>{translate("photoSharing:cancel")}</Button>
+        <LoadingButton
+          onClick={handleSubmit(updateInfor)}
+          loading={loading}
+          variant="contained"
+        >
+          {translate("photoSharing:update")}
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );

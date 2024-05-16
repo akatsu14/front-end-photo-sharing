@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import LoadingComponent from "../../../common/loading/LoadingComponent";
 import fetchModel from "../../../lib/fetchModelData";
+import LoadingComponent from "../../../lib/loading/LoadingComponent";
 import { socketComment } from "../../../utils/socketComment";
 import MasonryMode from "./MasonryMode";
 

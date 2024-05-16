@@ -1,15 +1,15 @@
 import { Info } from "@mui/icons-material";
 import Masonry from "@mui/lab/Masonry";
 import {
-  Dialog,
-  DialogContent,
-  IconButton,
-  ImageListItem,
-  ImageListItemBar,
+    Dialog,
+    DialogContent,
+    IconButton,
+    ImageListItem,
+    ImageListItemBar,
 } from "@mui/material";
 import moment from "moment";
 import { useState } from "react";
-import ItemTrong from "../../../common/notThing/ItemTrong";
+import ItemTrong from "../../../lib/notThing/ItemTrong";
 import { translate } from "../../../utils/i18n/translate";
 import { BaseUrl } from "../../../utils/socketComment";
 import AdvanceMode from "./AdvanceMode";
@@ -47,7 +47,7 @@ const MasonryMode = (props) => {
             <img {...srcset(pathImg)} alt={item.file_name} loading="lazy" />
             <ImageListItemBar
               title={user.first_name + " " + user.last_name}
-              subtitle={moment(item?.date_time).format("hh:mm DD/MM/YYYY")}
+              subtitle={moment(item?.date_time).format("llll")}
               actionIcon={
                 <IconButton
                   sx={{ color: "rgba(255, 255, 255, 0.54)" }}

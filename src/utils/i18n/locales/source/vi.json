@@ -3,6 +3,7 @@
     "updateInformation": "Cập nhật thông tin của bạn",
     "update": "Cập nhật",
     "language": "Ngôn ngữ",
+    "french": "Tiếng pháp",
     "english": "Tiếng anh",
     "vietnamese": "Tiếng việt",
     "firstName": "Họ",
@@ -25,8 +26,8 @@
     "commentsOf": "Bình luận của",
     "photosOf": "Ảnh của",
     "me": "tôi",
-    "noComment": "Không có bình luận nào",
-    "noPhoto": "Không có ảnh nào",
+    "noComment": "Không có bình luận nào ở đây",
+    "noPhoto": "Không có ảnh nào ở đây",
     "dashboard": "Trang chủ",
     "favoriteList": "Danh sách yêu thích",
     "bookmarkList": "Danh sách lưu trữ",
@@ -36,8 +37,16 @@
     "postYourPhoto": "Thêm ảnh của bạn",
     "selectAImageToUpload": "Chọn 1 bức ảnh để tải lên",
     "upload": "Tải lên",
-    "hi": "Xin chào"
-
+    "hi": "Xin chào",
+    "cancel": "Hủy",
+    "selectToView": "Vui lòng chọn người để bắt đầu",
+    "chooseFileToUpload": "Vui lòng chọn file để đăng tải",
+    "youNotCommentToPhoto": "Bạn chưa comment vào ảnh nào",
+    "welcomeToChatBox": "Chào mừng {{name}} đến với hộp trò chuyện",
+    "addYourPhoto": "Thêm ảnh của bạn",
+    "previewImage": "Xem trước ảnh",
+    "typeMessageHere": "Nhập tin nhắn ở đây",
+    "search": "Tìm kiếm"
   },
   "login": {
     "login": "Đăng nhập",

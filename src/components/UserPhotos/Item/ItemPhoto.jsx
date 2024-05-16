@@ -33,13 +33,18 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import LoadingComponent from "../../../common/loading/LoadingComponent";
+import { getColorForAvatar } from "../../../common/functions";
 import fetchModel from "../../../lib/fetchModelData";
+import LoadingComponent from "../../../lib/loading/LoadingComponent";
 import { translate } from "../../../utils/i18n/translate";
 import { BaseUrl, socketComment } from "../../../utils/socketComment";
 import "./styles.css";
 const ItemPhoto = (props) => {
-  const { item, userInfo, isAdvance, isComment } = props;
+  const { item, userInfo, isAdvance, isComment, listUser } = props;
+  let userPostPhoto =
+    userInfo?._id === item?.user_id
+      ? userInfo
+      : listUser.find((i) => i._id === item?.user_id);
   const navigate = useNavigate();
   const [photoData, setPhotoData] = useState(item);
   const [numOfFavorite, setNumOfFavorite] = useState(0);
@@ -52,7 +57,9 @@ const ItemPhoto = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const { user } = useSelector((state) => state.auth);
   const open = Boolean(anchorEl);
+
   const isUser = item?.user_id === user?._id;
+
   const postComment = async () => {
     try {
       setLoading(true);
@@ -84,7 +91,7 @@ const ItemPhoto = (props) => {
       `/api/likeOfPhoto/${photoData?._id}`,
       isFavorite ? "delete" : "post"
     );
-    socketComment.emit('likePost')
+    socketComment.emit("likePost");
     console.log("🚀 ~ postComment ~ res:", res);
     setIsFavorite(!isFavorite);
   };
@@ -93,7 +100,7 @@ const ItemPhoto = (props) => {
       `/api/bookmarkOfPhoto/${photoData?._id}`,
       isBookmark ? "delete" : "post"
     );
-    socketComment.emit('bookmarkPost')
+    socketComment.emit("bookmarkPost");
     setIsBookmark(!isBookmark);
 
     console.log("🚀 ~ handleBookmark ~ res:", res);
@@ -115,7 +122,6 @@ const ItemPhoto = (props) => {
       if (res?.success) {
         navigate(`/photos/${photoData?.user_id}`);
         socketComment.emit("sendComment");
-
       }
       setLoading(false);
     } catch (error) {
@@ -151,11 +157,11 @@ const ItemPhoto = (props) => {
               color={"blue"}
               style={{ cursor: "pointer" }}
             >
-              {`${userInfo?.first_name} ${userInfo?.last_name}`}
+              {`${userPostPhoto?.first_name} ${userPostPhoto?.last_name}`}
             </Typography>
           }
-          subheader={moment(photoData?.date_time).format("hh:mm DD/MM/YYYY")}
-          avatar={<Avatar>{userInfo?.first_name[0]}</Avatar>}
+          subheader={moment(photoData?.date_time).format("llll")}
+          avatar={<Avatar sx={{ bgcolor: getColorForAvatar(userPostPhoto?.first_name?.[0]) }}>{userPostPhoto?.first_name?.[0]}</Avatar>}
           action={
             isUser ? (
               <Box>
@@ -194,7 +200,7 @@ const ItemPhoto = (props) => {
               ? `${BaseUrl}/${photoData?.file_path}`
               : `../../images/${photoData.file_name}`
           }
-          alt={`${userInfo?.first_name} Post ${BaseUrl}/${photoData?.file_path}`}
+          alt={`${userPostPhoto?.first_name} Post ${BaseUrl}/${photoData?.file_path}`}
         />
         <Divider />
 
@@ -293,7 +299,12 @@ const CommentDetail = (props) => {
           alignItems: "center",
         }}
       >
-        <Avatar style={{ marginRight: "12px" }}>
+        <Avatar
+          sx={{
+            bgcolor: getColorForAvatar(items?.user?.first_name?.[0]),
+            mr: "12px",
+          }}
+        >
           {items.user?.first_name[0]}
         </Avatar>
         {`${items.user?.first_name} ${items.user?.last_name}:`}
@@ -304,7 +315,7 @@ const CommentDetail = (props) => {
         className="breakall"
       >{`${items?.comment}`}</Typography>
       <Typography variant="subtitle2" color="textSecondary" textAlign={"left"}>
-        {moment(items?.date_time).format("hh:mm DD/MM/YYYY")}
+        {moment(items?.date_time).format("llll")}
       </Typography>
     </div>
   );

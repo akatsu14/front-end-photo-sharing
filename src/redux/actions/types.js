@@ -13,4 +13,10 @@ export const modeTypes = {
 export const languageTypes = {
   SET_VIETNAMESE: "SET_VIETNAMESE",
   SET_ENGLISH: "SET_ENGLISH",
+  SET_FRENCH: "SET_FRENCH",
 };
+
+export const onlineTypes ={
+  SET_ONLINE:'SET_ONLINE',
+  SET_OFFLINE:'SET_OFFLINE',
+}

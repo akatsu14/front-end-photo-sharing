@@ -5,12 +5,15 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { loadUser, saveAuthToken } from "../../../common/functions";
+import {
+  functionAlert,
+  loadUser,
+  saveAuthToken,
+} from "../../../common/functions";
 import fetchModel from "../../../lib/fetchModelData";
 const LoginForm = () => {
   //Context
   //   const { loginUser } = useContext(AuthContext);
-
   //Navigate
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,7 +31,12 @@ const LoginForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    values: {
+      username: "",
+      password: "",
+    },
+  });
 
   const onSubmit = async (event) => {
     try {
@@ -37,32 +45,20 @@ const LoginForm = () => {
         "post",
         JSON.stringify(event)
       );
-      console.log("🚀 ~ onSubmit ~ res:", res);
 
       if (!res.success) {
         setAlert({ type: "danger", msg: res.msg });
       } else {
-        console.log("🚀 ~ onSubmit ~ res:", res);
         saveAuthToken(res?.token);
         setAlert(null);
-        navigate("/");
+        await loadUser(dispatch);
+        navigate("/").then(() =>
+          functionAlert("Thông báo", "Login thành công!")
+        );
       }
-      await loadUser(dispatch);
     } catch (error) {
       console.log("🚀 ~ handleSubmit ~ error:", error);
     }
-    // event.preventDefault();
-    // try {
-    // //   const res = await loginUser(loginForm);
-    //   if (!res.success) {
-    //     setAlert({ type: "danger", msg: res.msg });
-    //     setTimeout(() => {
-    //       setAlert(null);
-    //     }, 3000);
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
   };
 
   return (

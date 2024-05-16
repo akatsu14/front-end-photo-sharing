@@ -9,24 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import "swiper/css";
-import { Swiper, SwiperSlide } from "swiper/react";
 const Welcome = (props) => {
   const navigate = useNavigate();
-  const isTest = false;
-  return isTest ? (
-    <Swiper
-      spaceBetween={50}
-      slidesPerView={1}
-      onSlideChange={() => console.log("slide change")}
-      onSwiper={(swiper) => console.log(swiper)}
-    >
-      <SwiperSlide>Slide 1</SwiperSlide>
-      <SwiperSlide>Slide 2</SwiperSlide>
-      <SwiperSlide>Slide 3</SwiperSlide>
-      <SwiperSlide>Slide 4</SwiperSlide>
-    </Swiper>
-  ) : (
+  return (
     <Grid item flex={1}>
       <Box
         justifyContent={"center"}

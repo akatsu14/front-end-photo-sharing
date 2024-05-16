@@ -6,6 +6,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 // import { Login } from "@mui/icons-material";
 import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { KEY_STORAGE } from "./common/constants";
 import { loadUser } from "./common/functions";
 import Auth from "./components/Auth";
 import ProtectedRoot from "./components/Auth/ProtectedRoute";
@@ -18,18 +19,33 @@ import UserList from "./components/UserList";
 import UserPhotos from "./components/UserPhotos";
 import BookmarkPhotos from "./components/UserPhotos/Item/BookmarkPhotos";
 import FavoritePhotos from "./components/UserPhotos/Item/FavoritePhotos";
+import { setAuth } from "./redux/actions/authAction";
+import { socketChat } from "./utils/socketComment";
 const App = (props) => {
   const dispatch = useDispatch();
   const { language } = useSelector((state) => state.language);
-
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  if (!localStorage.getItem(KEY_STORAGE.TOKEN))
+    dispatch(setAuth({ isAuthenticated: false, user: null }));
+  const getAuthentation = async () => {
+    try {
+      await loadUser(dispatch, isAuthenticated);
+    } catch (error) {}
+  };
   useEffect(() => {
-    loadUser(dispatch);
+    socketChat.on("user-status", (data) => {
+      console.log(`User ${data.userId} is ${data.status}`);
+    });
+  }, [socketChat]);
+  useEffect(() => {
+    getAuthentation();
   }, []);
+
   return (
     <Box bgcolor={"#E4E6EB"}>
       <Router>
         <Routes>
-          <Route path="/" element={<DashBoard isHaveUserList={true}/>}>
+          <Route path="/" element={<DashBoard isHaveUserList={true} />}>
             <Route
               index
               path="/"
@@ -78,7 +94,7 @@ const App = (props) => {
           </Route>
           <Route path="/login" element={<Auth authRoute="login" />} />
           <Route path="/register" element={<Auth authRoute="register" />} />
-          <Route path="/chat" element={<Chat />} />
+
           <Route path="/me" element={<DashBoard />}>
             <Route
               index
@@ -95,6 +111,14 @@ const App = (props) => {
               element={
                 <ProtectedRoot>
                   <BookmarkPhotos />
+                </ProtectedRoot>
+              }
+            />
+            <Route
+              path="/me/chat"
+              element={
+                <ProtectedRoot>
+                  <Chat />
                 </ProtectedRoot>
               }
             />

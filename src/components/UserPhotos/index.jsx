@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingComponent from "../../common/loading/LoadingComponent";
 import fetchModel from "../../lib/fetchModelData";
+import LoadingComponent from "../../lib/loading/LoadingComponent";
 import AdvanceMode from "./Item/AdvanceMode";
 import BasicMode from "./Item/BasicMode";
 import MasonryMode from "./Item/MasonryMode";

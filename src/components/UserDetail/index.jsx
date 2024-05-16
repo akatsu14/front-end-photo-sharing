@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import { Button, Grid, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingComponent from "../../common/loading/LoadingComponent";
 import fetchModel from "../../lib/fetchModelData";
+import LoadingComponent from "../../lib/loading/LoadingComponent";
 import { translate } from "../../utils/i18n/translate";
 
 /**

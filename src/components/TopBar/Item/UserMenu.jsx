@@ -3,7 +3,6 @@ import {
   BorderColor,
   Chat,
   Check,
-  Forum,
   Language,
   Logout,
   Settings,
@@ -25,10 +24,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "semantic-ui-css/semantic.min.css";
 import { Flag } from "semantic-ui-react";
-import { logout } from "../../../common/functions";
+import { getColorForAvatar, logout } from "../../../common/functions";
 import fetchModel from "../../../lib/fetchModelData";
 import {
   setEnglish,
+  setFrench,
   setVietnamese,
 } from "../../../redux/actions/languageAction";
 import {
@@ -50,6 +50,7 @@ const UserMenu = (props) => {
   console.log("🚀 ~ UserMenu ~ isOpen:", isOpen);
   const { isAdvance, isBasic, isSticky } = useSelector((state) => state.mode);
   const { language } = useSelector((state) => state.language);
+  const { user } = useSelector((state) => state.auth);
 
   const getData = async () => {
     try {
@@ -82,7 +83,7 @@ const UserMenu = (props) => {
   };
   const handleLogout = () => {
     handleClose();
-    logout(dispatch);
+    logout(dispatch, user);
     navigate("/");
   };
   const goToMyInfo = () => {
@@ -109,7 +110,9 @@ const UserMenu = (props) => {
         onClick={handleClick}
         sx={{ cursor: "pointer" }}
       >
-        <Avatar>{userInfo?.first_name?.[0]}</Avatar>
+        <Avatar sx={{ bgcolor: getColorForAvatar(userInfo?.first_name?.[0]) }}>
+          {userInfo?.first_name?.[0]}
+        </Avatar>
         <Typography variant="h5" color="inherit">
           {userInfo?.first_name} {userInfo?.last_name}
         </Typography>
@@ -145,16 +148,16 @@ const UserMenu = (props) => {
             />
           ) : null}
         </MenuItem>
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
-            navigate("/chat");
+            navigate("/me/chat");
           }}
         >
           <ListItemIcon>
             <Forum fontSize="small" />
           </ListItemIcon>
           {translate("photoSharing:chat")}
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={handleUpdate}>
           <ListItemIcon>
             <BorderColor fontSize="small" />
@@ -236,7 +239,7 @@ const UserMenu = (props) => {
             }}
           >
             <ListItemText inset>
-            <ListItemIcon>
+              <ListItemIcon>
                 <Flag name="us" />
               </ListItemIcon>
               {translate("photoSharing:english")}
@@ -247,8 +250,25 @@ const UserMenu = (props) => {
               <Check color="success" />
             </ListItemIcon>
           </MenuItem>
+          <MenuItem
+            onClick={() => {
+              dispatch(setFrench());
+              i18n.changeLanguage("fr");
+            }}
+          >
+            <ListItemText inset>
+              <ListItemIcon>
+                <Flag name="fr" />
+              </ListItemIcon>
+              {translate("photoSharing:french")}
+            </ListItemText>
+            <ListItemIcon
+              sx={{ visibility: language === "fr" ? "visible" : "hidden" }}
+            >
+              <Check color="success" />
+            </ListItemIcon>
+          </MenuItem>
         </MenuList>
-        
       </Menu>
       <UserUpdateInfor open={isOpen} onClose={() => setIsOpen(false)} />
     </div>

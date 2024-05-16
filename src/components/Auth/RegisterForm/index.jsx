@@ -32,7 +32,15 @@ const RegisterForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    values: {
+      first_name: "",
+      last_name: "",
+      location: "",
+      description: "",
+      occupation: "",
+    },
+  });
 
   const onSubmit = async (event) => {
     try {

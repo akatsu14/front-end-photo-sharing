@@ -24,7 +24,6 @@ function TopBar(props) {
   const arrPath = pathname?.split("/");
   const navigate = useNavigate();
   const [currentViewUserInfor, setCurrentViewUserInfor] = useState();
-  const [userInfo, setUserInfo] = useState({});
   const [loading, setLoading] = useState(false);
   const auth = useSelector((state) => state.auth);
 
@@ -46,7 +45,7 @@ function TopBar(props) {
   useEffect(() => {
     getData();
   }, [arrPath[2]]);
-
+  console.log("arrPath[1] != me", arrPath[1] != "me");
   return (
     <AppBar className="topbar-appBar">
       <Toolbar
@@ -56,24 +55,8 @@ function TopBar(props) {
           alignItems: "center",
         }}
       >
-        {/* <FormControlLabel
-          control={
-            <Checkbox
-              accessKey="advance-mode"
-              sx={{
-                "&.Mui-checked": {
-                  color: green["A400"],
-                },
-              }}
-              onChange={() => setIsAdvance(!isAdvance)}
-              checked={isAdvance}
-            />
-          }
-          label="Advance mode"
-          sx={{ visibility: userInfo?._id ? "visible" : "hidden" }}
-        /> */}
         <Stack direction={"row"} alignItems={"center"}>
-          <ListItemIcon>
+          <ListItemIcon onClick={() => navigate("/")}>
             <AutoAwesomeMosaicOutlined
               fontSize="large"
               sx={{ color: "white" }}
@@ -81,9 +64,10 @@ function TopBar(props) {
           </ListItemIcon>
           {!isAuthenticated ? (
             <></>
-          ) : currentViewUserInfor == null ? (
+          ) : !arrPath?.[1] ||
+            (currentViewUserInfor == null && arrPath[1] !== "me") ? (
             <Typography key={"unChoose"}>
-              Vui lòng chọn người để xem ảnh
+              {translate("photoSharing:selectToView")}
             </Typography>
           ) : loading ? (
             <Typography variant="h5" color="inherit" textAlign={"right"}>
@@ -94,16 +78,18 @@ function TopBar(props) {
               variant="h5"
               color="inherit"
               textAlign={"right"}
-              key={currentViewUserInfor._id}
+              key={currentViewUserInfor?._id}
             >
               {arrPath[1] == "photos" &&
                 `${translate("photoSharing:photosOf")} `}
               {arrPath[1] == "users" && `${translate("photoSharing:infoOf")} `}
               {arrPath[1] == "commentOfUser" &&
                 `${translate("photoSharing:commentsOf")} `}
-              {currentViewUserInfor && currentViewUserInfor._id === user?._id
-                ? translate("photoSharing:me")
-                : `${currentViewUserInfor?.first_name} ${currentViewUserInfor?.last_name} `}
+              {arrPath?.[1] != "me" && arrPath?.[1]
+                ? currentViewUserInfor?._id === user?._id
+                  ? translate("photoSharing:me")
+                  : `${currentViewUserInfor?.first_name} ${currentViewUserInfor?.last_name}`
+                : ""}
             </Typography>
           )}
         </Stack>
@@ -129,6 +115,11 @@ function TopBar(props) {
           <MenuItem onClick={() => navigate("/me/bookmark")}>
             <Typography color="inherit">
               {translate("photoSharing:bookmarkList")}
+            </Typography>
+          </MenuItem>
+          <MenuItem onClick={() => navigate("/me/chat")}>
+            <Typography color="inherit">
+              {translate("photoSharing:chat")}
             </Typography>
           </MenuItem>
         </Stack>

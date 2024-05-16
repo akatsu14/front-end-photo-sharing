@@ -14,24 +14,16 @@ export const initOptionsI18n = (source) => {
     lng: savedLanguage || "en",
     resources: source,
 
-    // have a common namespace used around the full app
     ns: ["common"],
     defaultNS: "common",
     debug: false,
-    // cache: {
-    //   enabled: true
-    // },
 
     interpolation: {
-      // not needed for react as it does escape per default to prevent xss!
       escapeValue: false,
     },
   };
 };
 
-/**
- * Config i18n for app
- */
 i18n.use(initReactI18next).init(initOptionsI18n(resources));
 
 export default i18n;

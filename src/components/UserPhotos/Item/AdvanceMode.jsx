@@ -5,11 +5,11 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Keyboard, Mousewheel, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import ItemTrong from "../../../common/notThing/ItemTrong";
+import ItemTrong from "../../../lib/notThing/ItemTrong";
 import { translate } from "../../../utils/i18n/translate";
 import ItemPhoto from "./ItemPhoto";
 const AdvanceMode = (props) => {
-  const { userModel, userInfo, goToUser, isComment, index } = props;
+  const { userModel, userInfo, goToUser, isComment, index, listUser } = props;
   const moreThanOne = userModel?.length > 1;
   const listModule = moreThanOne
     ? [Navigation, Pagination, Mousewheel, Keyboard]
@@ -42,6 +42,7 @@ const AdvanceMode = (props) => {
                   goToUser={goToUser}
                   isAdvance
                   isComment={isComment}
+                  listUser={listUser}
                 />
               </SwiperSlide>
             );

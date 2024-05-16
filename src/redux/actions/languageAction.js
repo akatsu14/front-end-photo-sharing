@@ -14,3 +14,10 @@ export const setEnglish = () => (dispatch) => {
   });
 };
 
+export const setFrench = () => (dispatch) => {
+  dispatch({
+    type: languageTypes.SET_FRENCH,
+    payload: { language: "fr" },
+  });
+};
+

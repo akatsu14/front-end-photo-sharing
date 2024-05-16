@@ -5,6 +5,15 @@ export const KEY_STORAGE = {
   TOKEN: "token",
 };
 
-export const rootUrl = "http://localhost:8081";
-// const rootUrl = "https://dxfz3n-8081.csb.app/api";
-export const socketChatUrl = "http://26.208.114.46:3001";
+export const colorImages = [
+  "#00aefd",
+  "#ffa400",
+  "#07a787",
+  "#ff7870",
+  "#293649",
+  "pink",
+  "#fccd05",
+  "#e74c3c",
+  "#2979ff",
+  "#546e7a",
+];
