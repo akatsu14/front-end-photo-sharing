@@ -32,6 +32,7 @@ const RegisterForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm({
     values: {
       first_name: "",

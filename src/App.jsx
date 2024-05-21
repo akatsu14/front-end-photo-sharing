@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { KEY_STORAGE } from "./common/constants";
 import { loadUser } from "./common/functions";
 import Auth from "./components/Auth";
-import ProtectedRoot from "./components/Auth/ProtectedRoute";
+import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import Chat from "./components/Chat";
 import DashBoard from "./components/DashBroad";
 import InitialPage from "./components/DashBroad/Item/IntialPage";
@@ -50,45 +50,45 @@ const App = (props) => {
               index
               path="/"
               element={
-                <ProtectedRoot>
+                <ProtectedRoute>
                   <InitialPage />
-                </ProtectedRoot>
+                </ProtectedRoute>
               }
             />
             <Route
               index
               path="/users/:userId"
               element={
-                <ProtectedRoot>
+                <ProtectedRoute>
                   <UserDetail />
-                </ProtectedRoot>
+                </ProtectedRoute>
               }
             />
             <Route
               index
               path="/photos/:userId"
               element={
-                <ProtectedRoot>
+                <ProtectedRoute>
                   <UserPhotos />
-                </ProtectedRoot>
+                </ProtectedRoute>
               }
             />
             <Route
               index
               path="/users"
               element={
-                <ProtectedRoot>
+                <ProtectedRoute>
                   <UserList />
-                </ProtectedRoot>
+                </ProtectedRoute>
               }
             />
             <Route
               index
               path="/commentOfUser/:userId"
               element={
-                <ProtectedRoot>
+                <ProtectedRoute>
                   <UserComment />
-                </ProtectedRoot>
+                </ProtectedRoute>
               }
             />
           </Route>
@@ -100,29 +100,30 @@ const App = (props) => {
               index
               path="/me/favorite"
               element={
-                <ProtectedRoot>
+                <ProtectedRoute>
                   <FavoritePhotos />
-                </ProtectedRoot>
+                </ProtectedRoute>
               }
             />
             <Route
               index
               path="/me/bookmark"
               element={
-                <ProtectedRoot>
+                <ProtectedRoute>
                   <BookmarkPhotos />
-                </ProtectedRoot>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/me/chat"
               element={
-                <ProtectedRoot>
+                <ProtectedRoute>
                   <Chat />
-                </ProtectedRoot>
+                </ProtectedRoute>
               }
             />
           </Route>
+          <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
       </Router>
     </Box>

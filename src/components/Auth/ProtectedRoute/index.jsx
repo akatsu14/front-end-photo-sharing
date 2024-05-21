@@ -1,9 +1,8 @@
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import LoadingComponent from "../../../lib/loading/LoadingComponent";
-function ProtectedRoot({ user, children }) {
-  const auth = useSelector((state) => state.auth);
-  const { isAuthenticated, authLoading } = auth;
+const ProtectedRoute = ({ user, children }) => {
+  const { isAuthenticated, authLoading } = useSelector((state) => state.auth);
   if (authLoading) {
     return <LoadingComponent loading={authLoading} />;
   }
@@ -11,5 +10,5 @@ function ProtectedRoot({ user, children }) {
     return <Navigate to="/" replace />;
   }
   return children;
-}
-export default ProtectedRoot;
+};
+export default ProtectedRoute;
